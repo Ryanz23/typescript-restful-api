@@ -21,7 +21,11 @@ export class UserController {
             const request: LoginUserRequest = req.body as LoginUserRequest;
             const response = await UserService.login(request);
             res.status(200).json({
-                data: response
+                data: {
+                    username: response.username,
+                    name: response.name,
+                },
+                token: response.token
             })
         } catch (e) {
             next(e);
