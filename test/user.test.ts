@@ -190,3 +190,23 @@ describe('PATCH /api/users/current', () => {
         expect(await bcrypt.compare("updated", user.password)).toBe(true);
     })
 });
+
+describe('DELETE /api/users/current', () => {
+    beforeEach(async () => {
+        await UserTest.create();
+    })
+
+    afterEach(async () => {
+        await UserTest.delete();
+    })
+
+    it ('should reject logout user if token is wrong', async () => {
+        const response = await supertest(web)
+            .delete("/api/users/current")
+            .set("X-API-TOKEN", "salah");
+
+        logger.debug(response.body);
+        expect(response.status).toBe(401);
+        expect(response.body.errors).toBeDefined();
+    })
+})
